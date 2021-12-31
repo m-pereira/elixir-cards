@@ -1,6 +1,13 @@
 defmodule Cards do
   alias Cards.Card
 
+  @spec hand_of(integer) :: list(Card)
+  def hand_of(size) do
+    create_deck()
+    |> deal(size)
+    |> parse()
+  end
+
   @spec create_deck :: list(Card)
   def create_deck, do: build_deck(default_values(), default_suits())
 
@@ -12,18 +19,18 @@ defmodule Cards do
     build_deck(values, suits)
   end
 
-  @spec shuffle(list(Card)) :: list(Card)
-  def shuffle(deck), do: Enum.shuffle(deck)
-
-  @spec contains?(list(Card), String.t()) :: boolean
-  def contains?(deck, card), do: Enum.member?(deck, card)
-
   @spec deal(list(Card), integer) :: {list(Card), list(Card)}
   def deal(deck, hand_number) do
     deck
     |> shuffle
     |> Enum.split(hand_number)
   end
+
+  @spec shuffle(list(Card)) :: list(Card)
+  def shuffle(deck), do: Enum.shuffle(deck)
+
+  @spec contains?(list(Card), String.t()) :: boolean
+  def contains?(deck, card), do: Enum.member?(deck, card)
 
   @spec save(list(Card), String.t()) :: :ok
   def save(deck, filename) when is_list(deck) and is_binary(filename) do
@@ -32,11 +39,9 @@ defmodule Cards do
 
   @spec load(String.t()) :: {:ok, list(Card)} | {:error, String.t()}
   def load(filename) do
-    {status, binary} = File.read(filename)
-
-    case status do
-      :ok -> {:ok, :erlang.binary_to_term(binary)}
-      :error -> {:error, "Could not load deck from file"}
+    case File.read(filename) do
+      {:ok, binary} -> {:ok, :erlang.binary_to_term(binary)}
+      {:error, _} -> {:error, "Could not load deck from file"}
     end
   end
 
@@ -45,6 +50,8 @@ defmodule Cards do
       %Card{value: value, suit: suit}
     end
   end
+
+  defp parse({hand, _}) when is_list(hand), do: hand
 
   defp default_values do
     [

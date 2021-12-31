@@ -5,6 +5,15 @@ defmodule CardsTest do
 
   doctest Cards
 
+  describe "hand_of/1" do
+    test "returns the hand of cards of given size" do
+      size = 3
+
+      assert [%Card{value: _, suit: _}, %Card{value: _, suit: _}, %Card{value: _, suit: _}] =
+               Cards.hand_of(size)
+    end
+  end
+
   describe "create_deck/0" do
     test "returns the default deck when no args given" do
       deck = Cards.create_deck()
