@@ -153,13 +153,17 @@ defmodule CardsTest do
   end
 
   describe "load/1" do
-    test "returns the deck from the given file" do
+    test "when success, returns the deck from the given file" do
       deck = Cards.create_deck()
       Cards.save(deck, "test/tmp/load_1.txt")
 
-      assert Cards.load("test/tmp/load_1.txt") == deck
+      assert Cards.load("test/tmp/load_1.txt") == {:ok, deck}
 
       File.rm("test/tmp/load_1.txt")
+    end
+
+    test "when failure, raises ArgumentError" do
+      assert Cards.load("test/tmp/wrong_file.txt") == {:error, "Could not load deck from file"}
     end
   end
 end

@@ -25,16 +25,19 @@ defmodule Cards do
     |> Enum.split(hand_number)
   end
 
-  @spec save(list(Card), String.t) :: :ok
-  def save(deck, filename) do
+  @spec save(list(Card), String.t()) :: :ok
+  def save(deck, filename) when is_list(deck) and is_binary(filename) do
     File.write!(filename, :erlang.term_to_binary(deck))
   end
 
-  @spec load(String.t) :: list(Card)
+  @spec load(String.t()) :: {:ok, list(Card)} | {:error, String.t()}
   def load(filename) do
-    {:ok, binary} = File.read(filename)
+    {status, binary} = File.read(filename)
 
-    :erlang.binary_to_term(binary)
+    case status do
+      :ok -> {:ok, :erlang.binary_to_term(binary)}
+      :error -> {:error, "Could not load deck from file"}
+    end
   end
 
   defp build_deck(values, suits) do
