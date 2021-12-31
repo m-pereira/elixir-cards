@@ -5,21 +5,8 @@ defmodule Cards do
 
   alias Cards.Card
 
-  @doc """
-  Creates a new hand of cards with the size given
-
-  ## Example
-
-  ```
-  iex(1)> Cards.hand_of(2)
-  [
-    %Cards.Card{suit: "Spades", value: "Three"},
-    %Cards.Card{suit: "Spades", value: "Ten"}
-  ]
-  ```
-  """
   @spec hand_of(integer) :: list(Card)
-  def hand_of(size) do
+  def hand_of(size) when is_integer(size) do
     create_deck()
     |> deal(size)
     |> parse()
@@ -28,9 +15,37 @@ defmodule Cards do
   @spec create_deck :: list(Card)
   def create_deck, do: build_deck(default_values(), default_suits())
 
+  @doc """
+  Creates a deck of cards with given values and for default suits.
+
+  ## Example
+  ```
+  iex(2)> Cards.create_deck(["Queen"])
+  [
+    %Cards.Card{suit: "Hearts", value: "Queen"},
+    %Cards.Card{suit: "Spades", value: "Queen"},
+    %Cards.Card{suit: "Clubs", value: "Queen"},
+    %Cards.Card{suit: "Diamonds", value: "Queen"}
+  ]
+  ```
+  """
   @spec create_deck(list(Card)) :: list(Card)
   def create_deck(values) when is_list(values), do: build_deck(values, default_suits())
 
+  @doc """
+  Creates a deck of cards with the given values and suits.
+
+  ## Example
+  ```
+  iex(1)> Cards.create_deck(["Ace", "Two"], ["Diamonds", "Clubs"])
+  [
+    %Cards.Card{suit: "Diamonds", value: "Ace"},
+    %Cards.Card{suit: "Diamonds", value: "Two"},
+    %Cards.Card{suit: "Clubs", value: "Ace"},
+    %Cards.Card{suit: "Clubs", value: "Two"}
+  ]
+  ```
+  """
   @spec create_deck(list(Card), list(Card)) :: list(Card)
   def create_deck(values, suits) when is_list(values) and is_list(suits) do
     build_deck(values, suits)
@@ -46,6 +61,16 @@ defmodule Cards do
   @spec shuffle(list(Card)) :: list(Card)
   def shuffle(deck), do: Enum.shuffle(deck)
 
+  @doc """
+  Checks if the given card is in the given deck.
+
+  ## Example
+  ```
+  iex(1)> deck = Cards.create_deck(["Ace"], ["Clubs"])
+  iex(2)> Cards.contains?(deck, %Cards.Card{suit: "Clubs", value: "Ace"})
+  true
+  ```
+  """
   @spec contains?(list(Card), String.t()) :: boolean
   def contains?(deck, card), do: Enum.member?(deck, card)
 

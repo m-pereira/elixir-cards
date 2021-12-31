@@ -113,7 +113,7 @@ defmodule CardsTest do
     test "returns a shuffled deck" do
       deck = Cards.create_deck()
 
-      assert Cards.shuffle(deck) != deck
+      refute Cards.shuffle(deck) == deck
     end
   end
 
