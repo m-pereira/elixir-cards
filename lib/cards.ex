@@ -1,6 +1,23 @@
 defmodule Cards do
+  @moduledoc """
+  Provides a simple interface to the cards in the game.
+  """
+
   alias Cards.Card
 
+  @doc """
+  Creates a new hand of cards with the size given
+
+  ## Example
+
+  ```
+  iex(1)> Cards.hand_of(2)
+  [
+    %Cards.Card{suit: "Spades", value: "Three"},
+    %Cards.Card{suit: "Spades", value: "Ten"}
+  ]
+  ```
+  """
   @spec hand_of(integer) :: list(Card)
   def hand_of(size) do
     create_deck()
